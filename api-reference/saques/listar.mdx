@@ -1,0 +1,34 @@
+---
+title: "Listar Saques"
+api: "GET /api/withdrawals"
+description: "Retorna uma lista de todos os saques realizados."
+---
+
+### Query Parameters
+
+<ParamField query="limit" type="number" default="20">
+  Quantidade de registros por página
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X GET "https://api.zynxwallet.com.br/api/withdrawals?limit=10" \
+  -H "X-API-Key: zynx_sua_api_key"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Resposta
+{
+  "success": true,
+  "data": [
+    {
+      "id": "wth_xyz789",
+      "amount": 50.00,
+      "status": "COMPLETED",
+      "createdAt": "2024-01-15T15:00:00.000Z"
+    }
+  ]
+}
+```
+</ResponseExample>

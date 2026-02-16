@@ -1,0 +1,45 @@
+---
+title: "Consultar Saldo"
+api: "GET /api/account/balance"
+description: "Retorna o saldo disponível e pendente da sua conta."
+---
+
+### Resposta de Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  <Expandable title="Propriedades do Objeto">
+    <ResponseField name="available" type="number">
+      Saldo disponível para saque.
+    </ResponseField>
+    <ResponseField name="pending" type="number">
+      Saldo aguardando compensação.
+    </ResponseField>
+    <ResponseField name="currency" type="string">
+      Moeda da conta (ex: `BRL`).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl -X GET "https://api.zynxwallet.com.br/api/account/balance" \
+  -H "X-API-Key: zynx_sua_api_key"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Resposta
+{
+  "success": true,
+  "data": {
+    "available": 1500.50,
+    "pending": 250.00,
+    "currency": "BRL"
+  }
+}
+```
+</ResponseExample>

@@ -1,0 +1,33 @@
+---
+title: "Buscar Saque"
+api: "GET /api/withdrawals/{id}"
+description: "Consulta os detalhes de um saque específico."
+---
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  O ID do saque (ex: `wth_xyz789`)
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X GET "https://api.zynxwallet.com.br/api/withdrawals/wth_xyz789" \
+  -H "X-API-Key: zynx_sua_api_key"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Resposta
+{
+  "success": true,
+  "data": {
+    "id": "wth_xyz789",
+    "amount": 50.00,
+    "status": "COMPLETED",
+    "pixKey": "00011122233",
+    "createdAt": "2024-01-15T15:00:00.000Z"
+  }
+}
+```
+</ResponseExample>

@@ -1,0 +1,51 @@
+---
+title: "Criar Saque PIX"
+api: "POST /api/withdrawals/pix"
+description: "Realiza um novo saque para uma chave PIX."
+---
+
+### Request Body
+
+<ParamField body="amount" type="number" required>
+  Valor do saque em reais.
+</ParamField>
+
+<ParamField body="pixKey" type="string" required>
+  Chave PIX de destino.
+</ParamField>
+
+<ParamField body="pixKeyType" type="string" required>
+  Tipo da chave (`CPF`, `CNPJ`, `EMAIL`, `PHONE`, `EVP`).
+</ParamField>
+
+<ParamField body="description" type="string">
+  Descrição opcional para o saque.
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST "https://api.zynxwallet.com.br/api/withdrawals/pix" \
+  -H "X-API-Key: zynx_sua_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 50.00,
+    "pixKey": "00011122233",
+    "pixKeyType": "CPF",
+    "description": "Retirada de saldo"
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Resposta
+{
+  "success": true,
+  "data": {
+    "id": "wth_xyz789",
+    "amount": 50.00,
+    "status": "PROCESSING",
+    "createdAt": "2024-01-15T15:00:00.000Z"
+  }
+}
+```
+</ResponseExample>

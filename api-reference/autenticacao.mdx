@@ -1,0 +1,27 @@
+---
+title: "Autenticação"
+description: "Como autenticar suas requisições na API Zynx Wallet."
+---
+
+Todas as requisições à API da Zynx Wallet devem ser autenticadas utilizando uma chave de API no cabeçalho da requisição.
+
+### Cabeçalho de Autenticação
+
+Você deve incluir o cabeçalho `X-API-Key` em todas as suas chamadas.
+
+| Header | Valor |
+| :--- | :--- |
+| `X-API-Key` | `zynx_sua_chave_aqui` |
+
+<Warning>
+  Mantenha sua chave de API em segredo. Nunca a compartilhe em ambientes públicos como GitHub ou no front-end da sua aplicação.
+</Warning>
+
+### Exemplo de Requisição Autenticada
+
+```bash
+curl -X GET "https://api.zynxwallet.com.br/api/v1/account/balance" \
+  -H "X-API-Key: zynx_sua_chave_aqui"
+```
+
+Se a chave for inválida ou estiver ausente, a API retornará um erro `401 Unauthorized`.

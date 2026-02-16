@@ -1,0 +1,47 @@
+---
+title: "Listar Pagamentos"
+api: "GET /api/transactions"
+description: "Retorna uma lista paginada de todos os pagamentos."
+---
+
+### Query Parameters
+
+<ParamField query="status" type="string">
+  Filtrar por status (`PENDING`, `PAID`, `EXPIRED`, `CANCELLED`)
+</ParamField>
+
+<ParamField query="limit" type="number" default="20">
+  Quantidade de registros por página
+</ParamField>
+
+<ParamField query="page" type="number" default="1">
+  Número da página
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X GET "https://api.zynxwallet.com.br/api/transactions?status=PAID&limit=10" \
+  -H "X-API-Key: zynx_sua_api_key"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Resposta
+{
+  "success": true,
+  "data": [
+    {
+      "id": "pag_abc123xyz",
+      "amount": 99.90,
+      "status": "PAID",
+      "createdAt": "2024-01-15T14:00:00.000Z"
+    }
+  ],
+  "meta": {
+    "total": 150,
+    "page": 1,
+    "lastPage": 15
+  }
+}
+```
+</ResponseExample>

@@ -1,0 +1,103 @@
+---
+title: "Criar Pagamento"
+api: "POST /api/transactions/create"
+description: "Cria um novo pagamento PIX e retorna o QR Code para o cliente pagar."
+---
+
+### Request Body
+
+<ParamField body="amount" type="number" required>
+  Valor em reais (mínimo R$ 1,00)
+</ParamField>
+
+<ParamField body="payerName" type="string" required>
+  Nome completo do pagador
+</ParamField>
+
+<ParamField body="payerDocument" type="string" required>
+  CPF ou CNPJ do pagador (apenas números)
+</ParamField>
+
+<ParamField body="description" type="string">
+  Descrição do pagamento (ex: "Pedido #123")
+</ParamField>
+
+<ParamField body="externalId" type="string">
+  ID do seu sistema para referência
+</ParamField>
+
+<ParamField body="expiresIn" type="number" default="30">
+  Tempo de expiração em minutos
+</ParamField>
+
+<ParamField body="webhookUrl" type="string">
+  URL para receber notificação de pagamento
+</ParamField>
+
+### Resposta de Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  <Expandable title="Propriedades do Objeto">
+    <ResponseField name="id" type="string">
+      ID único da transação.
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Valor do pagamento.
+    </ResponseField>
+    <ResponseField name="status" type="string">
+      Status atual (`PENDING`).
+    </ResponseField>
+    <ResponseField name="qrCode" type="string">
+      Código PIX Copia e Cola.
+    </ResponseField>
+    <ResponseField name="qrCodeBase64" type="string">
+      Imagem do QR Code em Base64.
+    </ResponseField>
+    <ResponseField name="expiresAt" type="string">
+      Data de expiração.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl -X POST "https://api.zynxwallet.com.br/api/transactions/create" \
+  -H "X-API-Key: zynx_sua_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 99.90,
+    "payerName": "João da Silva",
+    "payerDocument": "12345678900",
+    "description": "Assinatura Premium",
+    "externalId": "pedido_12345",
+    "webhookUrl": "https://seusite.com/webhook/pagamento"
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Resposta
+{
+  "success": true,
+  "data": {
+    "id": "pag_abc123xyz",
+    "amount": 99.90,
+    "status": "PENDING",
+    "description": "Assinatura Premium",
+    "externalId": "pedido_12345",
+    "qrCode": "00020126...",
+    "qrCodeBase64": "data:image/png;base64,...",
+    "expiresAt": "2024-01-15T14:30:00.000Z",
+    "createdAt": "2024-01-15T14:00:00.000Z"
+  }
+}
+```
+</ResponseExample>
+
+<Tip>
+  Use o `qrCodeBase64` para exibir o QR Code diretamente em uma tag `<img>` ou use o `qrCode` para gerar o código você mesmo.
+</Tip>

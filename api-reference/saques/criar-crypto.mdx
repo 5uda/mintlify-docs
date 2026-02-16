@@ -1,0 +1,45 @@
+---
+title: "Criar Saque Crypto"
+api: "POST /api/withdrawals/crypto"
+description: "Realiza um novo saque em criptomoedas (USDT)."
+---
+
+### Request Body
+
+<ParamField body="amount" type="number" required>
+  Valor do saque em USDT.
+</ParamField>
+
+<ParamField body="address" type="string" required>
+  Endereço da carteira de destino.
+</ParamField>
+
+<ParamField body="network" type="string" required>
+  Rede da transação (ex: `TRC20`, `ERC20`).
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X POST "https://api.zynxwallet.com.br/api/withdrawals/crypto" \
+  -H "X-API-Key: zynx_sua_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 100.00,
+    "address": "T...",
+    "network": "TRC20"
+  }'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Resposta
+{
+  "success": true,
+  "data": {
+    "id": "wth_crypto_123",
+    "status": "PROCESSING",
+    "txId": null
+  }
+}
+```
+</ResponseExample>

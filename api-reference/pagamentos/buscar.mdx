@@ -1,0 +1,56 @@
+---
+title: "Buscar Pagamento"
+api: "GET /api/transactions/{id}"
+description: "Consulta os detalhes de um pagamento específico pelo ID."
+---
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  O ID da transação (ex: `pag_abc123xyz`)
+</ParamField>
+
+### Resposta de Sucesso
+
+<ResponseField name="success" type="boolean">
+  Indica se a operação foi bem-sucedida.
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  <Expandable title="Propriedades do Objeto">
+    <ResponseField name="id" type="string">
+      ID único da transação.
+    </ResponseField>
+    <ResponseField name="status" type="string">
+      Status atual (`PENDING`, `PAID`, `EXPIRED`, `CANCELLED`).
+    </ResponseField>
+    <ResponseField name="amount" type="number">
+      Valor original.
+    </ResponseField>
+    <ResponseField name="paidAt" type="string">
+      Data do pagamento (se pago).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+```bash cURL
+curl -X GET "https://api.zynxwallet.com.br/api/transactions/pag_abc123xyz" \
+  -H "X-API-Key: zynx_sua_api_key"
+```
+</RequestExample>
+
+<ResponseExample>
+```json Resposta
+{
+  "success": true,
+  "data": {
+    "id": "pag_abc123xyz",
+    "amount": 99.90,
+    "status": "PAID",
+    "paidAt": "2024-01-15T14:05:00.000Z",
+    "createdAt": "2024-01-15T14:00:00.000Z"
+  }
+}
+```
+</ResponseExample>
