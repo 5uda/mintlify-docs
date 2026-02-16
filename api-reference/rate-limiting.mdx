@@ -1,25 +1,41 @@
 ---
 title: "Rate Limiting"
-description: "Limites de requisições para garantir a estabilidade da API."
+icon: "gauge"
+description: "Limites de requisições para garantir a estabilidade e performance da API."
 ---
 
-Para garantir a performance e disponibilidade para todos os usuários, a API da Zynx Wallet aplica limites de taxa (rate limiting).
+Para garantir que a API da Zynx Wallet permaneça rápida e disponível para todos, aplicamos limites de taxa (Rate Limiting) baseados na sua chave de API.
 
 ### Limites Padrão
 
-| Categoria | Limite |
+Os limites são aplicados por minuto e variam de acordo com o tipo de operação:
+
+| Operação | Limite |
 | :--- | :--- |
-| **Leitura (GET)** | 100 requisições por minuto |
-| **Escrita (POST)** | 50 requisições por minuto |
+| **Leitura (GET)** | 100 requisições / min |
+| **Escrita (POST)** | 50 requisições / min |
 
-### Cabeçalhos de Resposta
+### Cabeçalhos de Controle
 
-Quando você atinge o limite, a API retornará o status `429 Too Many Requests` e incluirá os seguintes cabeçalhos:
+Você pode monitorar seu uso atual através dos cabeçalhos HTTP retornados em cada resposta:
 
-- `X-RateLimit-Limit`: O número máximo de requisições permitidas.
-- `X-RateLimit-Remaining`: O número de requisições restantes no período atual.
-- `X-RateLimit-Reset`: O tempo em segundos até que o limite seja resetado.
+| Header | Descrição |
+| :--- | :--- |
+| `X-RateLimit-Limit` | O limite total permitido no período. |
+| `X-RateLimit-Remaining` | Quantas requisições você ainda pode fazer. |
+| `X-RateLimit-Reset` | Tempo em segundos até o limite ser resetado. |
 
-<Tip>
-  Se você precisar de limites maiores para o seu negócio, entre em contato com nosso suporte comercial.
-</Tip>
+### Quando o limite é excedido
+
+Se você ultrapassar o limite, a API retornará um erro `429 Too Many Requests`.
+
+```json
+{
+  "success": false,
+  "error": "Rate limit exceeded. Please try again later."
+}
+```
+
+<Info>
+  Se o seu negócio exige limites maiores, entre em contato com nosso suporte para solicitar um upgrade de categoria para **BLACK**.
+</Info>

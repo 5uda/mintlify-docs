@@ -1,27 +1,37 @@
 ---
 title: "Autenticação"
-description: "Como autenticar suas requisições na API Zynx Wallet."
+icon: "key"
+description: "Como autenticar suas requisições na API Zynx Wallet de forma segura."
 ---
 
-Todas as requisições à API da Zynx Wallet devem ser autenticadas utilizando uma chave de API no cabeçalho da requisição.
+A API da Zynx Wallet utiliza chaves de API para autenticar requisições. Você pode gerenciar suas chaves através do [Painel Administrativo](https://painel.zynxwallet.com.br).
 
 ### Cabeçalho de Autenticação
 
-Você deve incluir o cabeçalho `X-API-Key` em todas as suas chamadas.
+Todas as requisições para a API devem incluir o cabeçalho `X-API-Key`.
 
-| Header | Valor |
-| :--- | :--- |
-| `X-API-Key` | `zynx_sua_chave_aqui` |
+| Header | Valor | Descrição |
+| :--- | :--- | :--- |
+| `X-API-Key` | `zynx_live_...` | Sua chave de API secreta. |
 
 <Warning>
-  Mantenha sua chave de API em segredo. Nunca a compartilhe em ambientes públicos como GitHub ou no front-end da sua aplicação.
+  **Segurança em Primeiro Lugar:** Nunca exponha sua chave de API em ambientes públicos, como repositórios do GitHub ou no código front-end (JavaScript do navegador).
 </Warning>
 
-### Exemplo de Requisição Autenticada
+### Exemplo de Requisição
 
 ```bash
-curl -X GET "https://api.zynxwallet.com.br/api/v1/account/balance" \
+curl -X GET "https://api.zynxwallet.com.br/api/v1/user/balance" \
   -H "X-API-Key: zynx_sua_chave_aqui"
 ```
 
-Se a chave for inválida ou estiver ausente, a API retornará um erro `401 Unauthorized`.
+### Erros de Autenticação
+
+Se a sua chave for inválida, expirada ou estiver ausente, a API retornará:
+
+- **401 Unauthorized:** A chave de API é inválida ou não foi fornecida.
+- **403 Forbidden:** A chave de API não tem permissão para acessar o recurso solicitado.
+
+<Tip>
+  Se você suspeitar que sua chave foi comprometida, gere uma nova imediatamente no painel e revogue a antiga.
+</Tip>
