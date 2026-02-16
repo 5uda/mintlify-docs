@@ -1,0 +1,31 @@
+---
+title: "Validação de Afiliados"
+api: "GET /affiliate/validate/{code}"
+description: "Verifique se um código de afiliado é válido antes de processar um cadastro ou venda."
+---
+
+### Path Parameters
+
+<ParamField path="code" type="string" required>
+  O código do afiliado a ser validado (ex: `PROMO2024`).
+</ParamField>
+
+<RequestExample>
+```bash cURL
+curl -X GET 'https://api.zynxwallet.com.br/api/v1/affiliate/validate/PROMO2024' \
+  -H 'X-API-Key: zynx_sua_chave_aqui'
+```
+</RequestExample>
+
+<ResponseExample>
+```json Resposta
+{
+  "success": true,
+  "data": {
+    "valid": true,
+    "code": "PROMO2024",
+    "discount": 10.0
+  }
+}
+```
+</ResponseExample>

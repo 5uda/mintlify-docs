@@ -1,10 +1,10 @@
 ---
-title: "Consultar Saldo"
-api: "GET /api/account/balance"
-description: "Retorna o saldo disponível e pendente da sua conta."
+title: "Consultar Saldo e Estatísticas"
+api: "GET /user/balance"
+description: "Retorna o saldo disponível, valores pendentes e estatísticas de uso."
 ---
 
-### Resposta de Sucesso
+### Resposta de Sucesso (200 OK)
 
 <ResponseField name="success" type="boolean">
   Indica se a operação foi bem-sucedida.
@@ -12,22 +12,36 @@ description: "Retorna o saldo disponível e pendente da sua conta."
 
 <ResponseField name="data" type="object">
   <Expandable title="Propriedades do Objeto">
-    <ResponseField name="available" type="number">
-      Saldo disponível para saque.
+    <ResponseField name="balance" type="object">
+      <Expandable title="Detalhes do Saldo">
+        <ResponseField name="total" type="number">
+          Saldo total em centavos.
+        </ResponseField>
+        <ResponseField name="pendingPayments" type="number">
+          Pagamentos pendentes em centavos.
+        </ResponseField>
+        <ResponseField name="totalWithPending" type="number">
+          Saldo total incluindo pendentes em centavos.
+        </ResponseField>
+      </Expandable>
     </ResponseField>
-    <ResponseField name="pending" type="number">
-      Saldo aguardando compensação.
-    </ResponseField>
-    <ResponseField name="currency" type="string">
-      Moeda da conta (ex: `BRL`).
+    <ResponseField name="statistics" type="object">
+      <Expandable title="Estatísticas">
+        <ResponseField name="totalReceived" type="number">
+          Total recebido em centavos.
+        </ResponseField>
+        <ResponseField name="completedPayments" type="number">
+          Número de pagamentos concluídos.
+        </ResponseField>
+      </Expandable>
     </ResponseField>
   </Expandable>
 </ResponseField>
 
 <RequestExample>
 ```bash cURL
-curl -X GET "https://api.zynxwallet.com.br/api/account/balance" \
-  -H "X-API-Key: zynx_sua_api_key"
+curl -X GET 'https://api.zynxwallet.com.br/api/v1/user/balance' \
+  -H 'X-API-Key: zynx_sua_chave_aqui'
 ```
 </RequestExample>
 
@@ -36,10 +50,20 @@ curl -X GET "https://api.zynxwallet.com.br/api/account/balance" \
 {
   "success": true,
   "data": {
-    "available": 1500.50,
-    "pending": 250.00,
-    "currency": "BRL"
+    "balance": {
+      "total": 1250050,
+      "pendingPayments": 45000,
+      "totalWithPending": 1295050
+    },
+    "statistics": {
+      "totalReceived": 5000000,
+      "completedPayments": 342
+    }
   }
 }
 ```
 </ResponseExample>
+
+<Note>
+  **Centavos:** Todos os valores monetários retornados nos campos de saldo estão em **centavos** (inteiros).
+</Note>

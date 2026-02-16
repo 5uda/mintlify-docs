@@ -1,32 +1,32 @@
 ---
-title: "Criar Saque Crypto"
-api: "POST /api/withdrawals/crypto"
-description: "Realiza um novo saque em criptomoedas (USDT)."
+title: "Saque em Criptomoedas (USDT BEP20)"
+api: "POST /withdraw/crypto"
+description: "Converta seu saldo em reais para USDT e envie para qualquer carteira na rede Binance Smart Chain (BSC)."
 ---
 
-### Request Body
+### Parâmetros do Corpo (JSON)
 
 <ParamField body="amount" type="number" required>
-  Valor do saque em USDT.
+  Valor em reais a ser convertido.
 </ParamField>
 
-<ParamField body="address" type="string" required>
-  Endereço da carteira de destino.
+<ParamField body="wallet" type="string" required>
+  Endereço da carteira BEP20 (0x...).
 </ParamField>
 
-<ParamField body="network" type="string" required>
-  Rede da transação (ex: `TRC20`, `ERC20`).
+<ParamField body="description" type="string">
+  Descrição opcional para o saque.
 </ParamField>
 
 <RequestExample>
 ```bash cURL
-curl -X POST "https://api.zynxwallet.com.br/api/withdrawals/crypto" \
-  -H "X-API-Key: zynx_sua_api_key" \
-  -H "Content-Type: application/json" \
+curl -X POST 'https://api.zynxwallet.com.br/api/v1/withdraw/crypto' \
+  -H 'X-API-Key: zynx_sua_chave_aqui' \
+  -H 'Content-Type: application/json' \
   -d '{
-    "amount": 100.00,
-    "address": "T...",
-    "network": "TRC20"
+    "amount": 1000.00,
+    "wallet": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "description": "Saque para Wallet Externa"
   }'
 ```
 </RequestExample>

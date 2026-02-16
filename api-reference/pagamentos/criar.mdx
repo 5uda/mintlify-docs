@@ -1,40 +1,32 @@
 ---
-title: "Criar Pagamento"
-api: "POST /api/transactions/create"
-description: "Cria um novo pagamento PIX e retorna o QR Code para o cliente pagar."
+title: "Criar Pagamento PIX"
+api: "POST /payment/create"
+description: "Cria uma nova transação PIX e gera o QR Code e o código Copia e Cola."
 ---
 
-### Request Body
+### Parâmetros do Corpo (JSON)
 
-<ParamField body="amount" type="number" required>
-  Valor em reais (mínimo R$ 1,00)
-</ParamField>
-
-<ParamField body="payerName" type="string" required>
-  Nome completo do pagador
-</ParamField>
-
-<ParamField body="payerDocument" type="string" required>
-  CPF ou CNPJ do pagador (apenas números)
+<ParamField body="value" type="number" required>
+  Valor em reais (ex: 100.50). Mínimo R$ 1,00.
 </ParamField>
 
 <ParamField body="description" type="string">
-  Descrição do pagamento (ex: "Pedido #123")
+  Descrição que aparecerá no extrato.
 </ParamField>
 
-<ParamField body="externalId" type="string">
-  ID do seu sistema para referência
+<ParamField body="coverFee" type="boolean" default="false">
+  Se `true`, a taxa é adicionada ao valor total. Se `false`, a taxa é descontada do valor recebido.
 </ParamField>
 
-<ParamField body="expiresIn" type="number" default="30">
-  Tempo de expiração em minutos
+<ParamField body="splitUser" type="string">
+  Email de outro usuário Zynx para divisão de valores.
 </ParamField>
 
-<ParamField body="webhookUrl" type="string">
-  URL para receber notificação de pagamento
+<ParamField body="splitTax" type="number">
+  Porcentagem (0.01 a 100) para o `splitUser`.
 </ParamField>
 
-### Resposta de Sucesso
+### Resposta de Sucesso (201 Created)
 
 <ResponseField name="success" type="boolean">
   Indica se a operação foi bem-sucedida.
@@ -45,36 +37,44 @@ description: "Cria um novo pagamento PIX e retorna o QR Code para o cliente paga
     <ResponseField name="id" type="string">
       ID único da transação.
     </ResponseField>
-    <ResponseField name="amount" type="number">
-      Valor do pagamento.
+    <ResponseField name="transactionId" type="string">
+      ID interno da transação.
+    </ResponseField>
+    <ResponseField name="valueInReais" type="number">
+      Valor total em reais.
+    </ResponseField>
+    <ResponseField name="netValue" type="number">
+      Valor líquido em centavos.
+    </ResponseField>
+    <ResponseField name="fee" type="number">
+      Taxa aplicada em centavos.
     </ResponseField>
     <ResponseField name="status" type="string">
       Status atual (`PENDING`).
     </ResponseField>
-    <ResponseField name="qrCode" type="string">
+    <ResponseField name="qrcodeUrl" type="string">
+      URL ou Base64 da imagem do QR Code.
+    </ResponseField>
+    <ResponseField name="copyPaste" type="string">
       Código PIX Copia e Cola.
     </ResponseField>
-    <ResponseField name="qrCodeBase64" type="string">
-      Imagem do QR Code em Base64.
-    </ResponseField>
-    <ResponseField name="expiresAt" type="string">
-      Data de expiração.
+    <ResponseField name="createdAt" type="string">
+      Data de criação da transação.
     </ResponseField>
   </Expandable>
 </ResponseField>
 
 <RequestExample>
 ```bash cURL
-curl -X POST "https://api.zynxwallet.com.br/api/transactions/create" \
-  -H "X-API-Key: zynx_sua_api_key" \
-  -H "Content-Type: application/json" \
+curl -X POST 'https://api.zynxwallet.com.br/api/v1/payment/create' \
+  -H 'X-API-Key: zynx_sua_chave_aqui' \
+  -H 'Content-Type: application/json' \
   -d '{
-    "amount": 99.90,
-    "payerName": "João da Silva",
-    "payerDocument": "12345678900",
-    "description": "Assinatura Premium",
-    "externalId": "pedido_12345",
-    "webhookUrl": "https://seusite.com/webhook/pagamento"
+    "value": 150.00,
+    "description": "Venda de Produto #123",
+    "coverFee": true,
+    "splitUser": "parceiro@zynx.com",
+    "splitTax": 10.0
   }'
 ```
 </RequestExample>
@@ -84,20 +84,16 @@ curl -X POST "https://api.zynxwallet.com.br/api/transactions/create" \
 {
   "success": true,
   "data": {
-    "id": "pag_abc123xyz",
-    "amount": 99.90,
+    "id": "pay_abc123",
+    "transactionId": "mistic_xyz789",
+    "valueInReais": 153.00,
+    "netValue": 15000,
+    "fee": 300,
     "status": "PENDING",
-    "description": "Assinatura Premium",
-    "externalId": "pedido_12345",
-    "qrCode": "00020126...",
-    "qrCodeBase64": "data:image/png;base64,...",
-    "expiresAt": "2024-01-15T14:30:00.000Z",
-    "createdAt": "2024-01-15T14:00:00.000Z"
+    "qrcodeUrl": "data:image/png;base64,...",
+    "copyPaste": "00020126360014br.gov.bcb.brcode...",
+    "createdAt": "2024-02-16T15:00:00Z"
   }
 }
 ```
 </ResponseExample>
-
-<Tip>
-  Use o `qrCodeBase64` para exibir o QR Code diretamente em uma tag `<img>` ou use o `qrCode` para gerar o código você mesmo.
-</Tip>

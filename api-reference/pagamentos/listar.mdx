@@ -1,27 +1,27 @@
 ---
 title: "Listar Pagamentos"
-api: "GET /api/transactions"
-description: "Retorna uma lista paginada de todos os pagamentos."
+api: "GET /payment/list"
+description: "Retorna uma lista paginada de todos os seus pagamentos."
 ---
 
 ### Query Parameters
 
 <ParamField query="status" type="string">
-  Filtrar por status (`PENDING`, `PAID`, `EXPIRED`, `CANCELLED`)
+  Filtrar por status (`PENDING`, `COMPLETED`, `FAILED`).
 </ParamField>
 
-<ParamField query="limit" type="number" default="20">
-  Quantidade de registros por página
+<ParamField query="limit" type="number" default="50">
+  Quantidade por página (máx 1000).
 </ParamField>
 
-<ParamField query="page" type="number" default="1">
-  Número da página
+<ParamField query="offset" type="number" default="0">
+  Pular registros.
 </ParamField>
 
 <RequestExample>
 ```bash cURL
-curl -X GET "https://api.zynxwallet.com.br/api/transactions?status=PAID&limit=10" \
-  -H "X-API-Key: zynx_sua_api_key"
+curl -X GET 'https://api.zynxwallet.com.br/api/v1/payment/list?status=COMPLETED&limit=10' \
+  -H 'X-API-Key: zynx_sua_chave_aqui'
 ```
 </RequestExample>
 
@@ -31,17 +31,13 @@ curl -X GET "https://api.zynxwallet.com.br/api/transactions?status=PAID&limit=10
   "success": true,
   "data": [
     {
-      "id": "pag_abc123xyz",
-      "amount": 99.90,
-      "status": "PAID",
-      "createdAt": "2024-01-15T14:00:00.000Z"
+      "id": "pay_abc123",
+      "status": "COMPLETED",
+      "value": 15300,
+      "netValue": 15000,
+      "updatedAt": "2024-02-16T15:05:00Z"
     }
-  ],
-  "meta": {
-    "total": 150,
-    "page": 1,
-    "lastPage": 15
-  }
+  ]
 }
 ```
 </ResponseExample>

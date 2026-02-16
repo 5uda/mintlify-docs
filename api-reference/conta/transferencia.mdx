@@ -1,27 +1,37 @@
 ---
-title: "Transferência Interna"
-api: "POST /api/account/transfer"
-description: "Transfere saldo instantaneamente para outro usuário Zynx."
+title: "Enviar Dinheiro (Reembolso/Transferência)"
+api: "POST /payment/send"
+description: "Realiza um envio direto de valores. Ideal para automação de reembolsos."
 ---
 
-### Request Body
+### Parâmetros do Corpo (JSON)
 
 <ParamField body="amount" type="number" required>
-  Valor da transferência.
+  Valor em reais.
 </ParamField>
 
-<ParamField body="toUserEmail" type="string" required>
-  E-mail do destinatário Zynx.
+<ParamField body="pixKey" type="string" required>
+  Chave PIX de destino.
+</ParamField>
+
+<ParamField body="pixKeyType" type="string" required>
+  `CPF`, `CNPJ`, `EMAIL`, `PHONE` ou `RANDOM`.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Descrição da transferência.
 </ParamField>
 
 <RequestExample>
 ```bash cURL
-curl -X POST "https://api.zynxwallet.com.br/api/account/transfer" \
-  -H "X-API-Key: zynx_sua_api_key" \
-  -H "Content-Type: application/json" \
+curl -X POST 'https://api.zynxwallet.com.br/api/v1/payment/send' \
+  -H 'X-API-Key: zynx_sua_chave_aqui' \
+  -H 'Content-Type: application/json' \
   -d '{
-    "amount": 10.00,
-    "toUserEmail": "destino@exemplo.com"
+    "amount": 25.50,
+    "pixKey": "cliente@email.com",
+    "pixKeyType": "EMAIL",
+    "description": "Reembolso Pedido #99"
   }'
 ```
 </RequestExample>

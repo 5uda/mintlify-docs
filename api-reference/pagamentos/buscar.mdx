@@ -1,16 +1,16 @@
 ---
-title: "Buscar Pagamento"
-api: "GET /api/transactions/{id}"
-description: "Consulta os detalhes de um pagamento específico pelo ID."
+title: "Consultar Status de Pagamento"
+api: "GET /payment/get/{id}"
+description: "Verifica os detalhes e o status atual de um pagamento específico."
 ---
 
 ### Path Parameters
 
 <ParamField path="id" type="string" required>
-  O ID da transação (ex: `pag_abc123xyz`)
+  O ID da transação (ex: `pay_abc123`)
 </ParamField>
 
-### Resposta de Sucesso
+### Resposta de Sucesso (200 OK)
 
 <ResponseField name="success" type="boolean">
   Indica se a operação foi bem-sucedida.
@@ -22,21 +22,24 @@ description: "Consulta os detalhes de um pagamento específico pelo ID."
       ID único da transação.
     </ResponseField>
     <ResponseField name="status" type="string">
-      Status atual (`PENDING`, `PAID`, `EXPIRED`, `CANCELLED`).
+      Status atual (`PENDING`, `COMPLETED`, `FAILED`).
     </ResponseField>
-    <ResponseField name="amount" type="number">
-      Valor original.
+    <ResponseField name="value" type="number">
+      Valor total em centavos.
     </ResponseField>
-    <ResponseField name="paidAt" type="string">
-      Data do pagamento (se pago).
+    <ResponseField name="netValue" type="number">
+      Valor líquido em centavos.
+    </ResponseField>
+    <ResponseField name="updatedAt" type="string">
+      Data da última atualização.
     </ResponseField>
   </Expandable>
 </ResponseField>
 
 <RequestExample>
 ```bash cURL
-curl -X GET "https://api.zynxwallet.com.br/api/transactions/pag_abc123xyz" \
-  -H "X-API-Key: zynx_sua_api_key"
+curl -X GET 'https://api.zynxwallet.com.br/api/v1/payment/get/pay_abc123' \
+  -H 'X-API-Key: zynx_sua_chave_aqui'
 ```
 </RequestExample>
 
@@ -45,11 +48,11 @@ curl -X GET "https://api.zynxwallet.com.br/api/transactions/pag_abc123xyz" \
 {
   "success": true,
   "data": {
-    "id": "pag_abc123xyz",
-    "amount": 99.90,
-    "status": "PAID",
-    "paidAt": "2024-01-15T14:05:00.000Z",
-    "createdAt": "2024-01-15T14:00:00.000Z"
+    "id": "pay_abc123",
+    "status": "COMPLETED",
+    "value": 15300,
+    "netValue": 15000,
+    "updatedAt": "2024-02-16T15:05:00Z"
   }
 }
 ```
