@@ -1,69 +1,232 @@
 ---
-title: "Consultar Saldo e Estatísticas"
-api: "GET /user/balance"
-description: "Retorna o saldo disponível, valores pendentes e estatísticas de uso."
+title: "Consultar Saldo do Usuário"
+api: "GET /api/v1/user/balance"
+description: "Retorna o saldo atual, estatísticas de pagamentos e limites da conta."
 ---
 
-### Resposta de Sucesso (200 OK)
+Este endpoint retorna **informações completas da conta do usuário autenticado**, incluindo:
 
-<ResponseField name="success" type="boolean">
-  Indica se a operação foi bem-sucedida.
-</ResponseField>
+- saldo atual
+- pagamentos pendentes
+- estatísticas de transações
+- limites da conta
+- plano e taxa aplicada
 
-<ResponseField name="data" type="object">
-  <Expandable title="Propriedades do Objeto">
-    <ResponseField name="balance" type="object">
-      <Expandable title="Detalhes do Saldo">
-        <ResponseField name="total" type="number">
-          Saldo total em centavos.
-        </ResponseField>
-        <ResponseField name="pendingPayments" type="number">
-          Pagamentos pendentes em centavos.
-        </ResponseField>
-        <ResponseField name="totalWithPending" type="number">
-          Saldo total incluindo pendentes em centavos.
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-    <ResponseField name="statistics" type="object">
-      <Expandable title="Estatísticas">
-        <ResponseField name="totalReceived" type="number">
-          Total recebido em centavos.
-        </ResponseField>
-        <ResponseField name="completedPayments" type="number">
-          Número de pagamentos concluídos.
-        </ResponseField>
-      </Expandable>
-    </ResponseField>
-  </Expandable>
-</ResponseField>
+---
+
+# Autenticação
+
+Envie sua API Key no header.
+
+```bash
+X-API-Key: zynx_sua_chave_aqui
+```
+
+---
+
+# Rate Limit
+
+| Tipo | Limite |
+|-----|------|
+API Key | 100 requisições por minuto |
+
+---
+
+# Exemplo de requisição
 
 <RequestExample>
-```bash cURL
-curl -X GET 'https://api.zynxwallet.com.br/api/v1/user/balance' \
-  -H 'X-API-Key: zynx_sua_chave_aqui'
+
+```bash
+curl -X GET "https://api.zynxwallet.com.br/api/v1/user/balance" \
+-H "X-API-Key: zynx_sua_chave_aqui"
 ```
+
 </RequestExample>
 
+---
+
+# Estrutura da resposta
+
+<ResponseField name="success" type="boolean">
+Indica se a requisição foi processada com sucesso.
+</ResponseField>
+
+---
+
+# Saldo
+
+<ResponseField name="data.balance.total" type="number">
+Saldo atual da conta em centavos.
+</ResponseField>
+
+<ResponseField name="data.balance.pendingPayments" type="number">
+Valor total de pagamentos pendentes.
+</ResponseField>
+
+<ResponseField name="data.balance.totalWithPending" type="number">
+Saldo total incluindo pagamentos pendentes.
+</ResponseField>
+
+<ResponseField name="data.balance.isNegative" type="boolean">
+Indica se o saldo da conta está negativo.
+</ResponseField>
+
+---
+
+# Disputas
+
+<ResponseField name="data.disputes.total" type="number">
+Total de disputas registradas.
+</ResponseField>
+
+<ResponseField name="data.disputes.pending" type="number">
+Quantidade de disputas em andamento.
+</ResponseField>
+
+<ResponseField name="data.disputes.totalDisputedAmount" type="number">
+Valor total em disputa.
+</ResponseField>
+
+<ResponseField name="data.disputes.totalBlockedAmount" type="number">
+Valor total bloqueado devido a disputas.
+</ResponseField>
+
+---
+
+# Estatísticas
+
+<ResponseField name="data.statistics.totalReceived" type="number">
+Valor total recebido em pagamentos concluídos.
+</ResponseField>
+
+<ResponseField name="data.statistics.totalFees" type="number">
+Total de taxas cobradas nas transações.
+</ResponseField>
+
+<ResponseField name="data.statistics.completedPayments" type="number">
+Quantidade de pagamentos concluídos.
+</ResponseField>
+
+<ResponseField name="data.statistics.pendingPayments" type="number">
+Quantidade de pagamentos pendentes.
+</ResponseField>
+
+<ResponseField name="data.statistics.totalPayments" type="number">
+Total geral de pagamentos registrados.
+</ResponseField>
+
+---
+
+# Limites da conta
+
+<ResponseField name="data.limits.daily" type="number">
+Limite diário de transações.
+</ResponseField>
+
+<ResponseField name="data.limits.dailyUsed" type="number">
+Valor já utilizado do limite diário.
+</ResponseField>
+
+<ResponseField name="data.limits.dailyRemaining" type="number">
+Valor restante disponível para uso no dia.
+</ResponseField>
+
+<ResponseField name="data.limits.monthly" type="number">
+Limite mensal de transações.
+</ResponseField>
+
+<ResponseField name="data.limits.monthlyUsed" type="number">
+Valor já utilizado do limite mensal.
+</ResponseField>
+
+<ResponseField name="data.limits.monthlyRemaining" type="number">
+Valor restante disponível no mês.
+</ResponseField>
+
+<ResponseField name="data.limits.perTransaction" type="number">
+Valor máximo permitido por transação.
+</ResponseField>
+
+---
+
+# Plano da conta
+
+<ResponseField name="data.plan.name" type="string">
+Nome do plano da conta.
+</ResponseField>
+
+<ResponseField name="data.plan.transactionFee" type="number">
+Taxa fixa aplicada por transação em centavos.
+</ResponseField>
+
+<ResponseField name="data.plan.transactionFeeInReais" type="string">
+Taxa exibida em reais.
+</ResponseField>
+
+<ResponseField name="data.plan.transactionFeePercent" type="number">
+Percentual de taxa aplicado nas transações.
+</ResponseField>
+
+<ResponseField name="data.plan.transactionFeeFixed" type="number">
+Valor fixo da taxa em centavos.
+</ResponseField>
+
+<ResponseField name="data.plan.isPercentage" type="boolean">
+Indica se a taxa é percentual ou fixa.
+</ResponseField>
+
+---
+
+# Exemplo de resposta
+
 <ResponseExample>
-```json Resposta
+
+```json
 {
   "success": true,
   "data": {
     "balance": {
-      "total": 1250050,
-      "pendingPayments": 45000,
-      "totalWithPending": 1295050
+      "total": 15000,
+      "pendingPayments": 3000,
+      "totalWithPending": 18000,
+      "isNegative": false
+    },
+    "disputes": {
+      "total": 0,
+      "pending": 0,
+      "totalDisputedAmount": 0,
+      "totalBlockedAmount": 0
     },
     "statistics": {
-      "totalReceived": 5000000,
-      "completedPayments": 342
+      "totalReceived": 50000,
+      "totalFees": 2000,
+      "completedPayments": 10,
+      "pendingPayments": 2,
+      "totalPayments": 12
+    },
+    "limits": {
+      "daily": 100000,
+      "dailyUsed": 20000,
+      "dailyRemaining": 80000,
+      "monthly": 1000000,
+      "monthlyUsed": 150000,
+      "monthlyRemaining": 850000,
+      "perTransaction": 50000
+    },
+    "plan": {
+      "name": "WHITE",
+      "transactionFee": 100,
+      "transactionFeeInReais": "R$1.00",
+      "transactionFeePercent": 0,
+      "transactionFeeFixed": 100,
+      "isPercentage": false
     }
   }
 }
 ```
+
 </ResponseExample>
 
-<Note>
-  **Centavos:** Todos os valores monetários retornados nos campos de saldo estão em **centavos** (inteiros).
-</Note>
+---
+
+Este endpoint é utilizado para **consultar o saldo e as informações completas da conta do usuário**.
